@@ -23,11 +23,9 @@ const categories = require('../../config/categories');
 
 const uploadFilters = require('../../lib/mediaBrowsing/helpers');
 
-
 const { saveAndServeFilesDirectory } = require('../../lib/helpers/settings');
 
 const validator = require('email-validator');
-
 
 const javascriptTimeAgo = require('javascript-time-ago');
 javascriptTimeAgo.locale(require('javascript-time-ago/locales/en'));
@@ -40,8 +38,8 @@ const timeAgoEnglish = new javascriptTimeAgo('en-US');
  * Page to facilitate user uploads
  */
 exports.getFileUpload = async (req, res) => {
-
-  if(process.env.UPLOADS_DISABLED == 'true'){
+  const { UPLOADS_DISABLED } = process.env
+  if(UPLOADS_DISABLED == 'true'){
     return res.render('api/disabledUploads', {
       title: 'File Upload'
     });
@@ -66,7 +64,6 @@ exports.getFileUpload = async (req, res) => {
  * Get user's individual subscriptions page
  */
 exports.subscriptions = async (req, res) => {
-
   try {
 
     if (!req.user) {
@@ -129,7 +126,6 @@ exports.subscriptions = async (req, res) => {
  * Profile page.
  */
 exports.getChannel = async (req, res) => {
-
   let page = req.query.page;
   if(!page){ page = 1 }
   page = parseInt(page);
@@ -145,7 +141,6 @@ exports.getChannel = async (req, res) => {
   const nextNumber = pagination.getNextNumber(page);
 
   try {
-
     // find the user per channelUrl
     user = await User.findOne({
       channelUrl:  new RegExp(["^", req.params.channel, "$"].join(""), "i")
